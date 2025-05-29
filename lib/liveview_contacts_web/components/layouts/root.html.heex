@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title default="LiveviewContacts" suffix=" · Phoenix Framework">
+      {assigns[:page_title]}
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
+    <script>
+      (() => {
+        const setTheme = (theme) => {
+          if (theme === "system") {
+            localStorage.removeItem("phx:theme");
+            document.documentElement.removeAttribute("data-theme");
+          } else {
+            localStorage.setItem("phx:theme", theme);
+            document.documentElement.setAttribute("data-theme", theme);
+          }
+        };
+        if (!document.documentElement.hasAttribute("data-theme")) {
+          setTheme(localStorage.getItem("phx:theme") || "system");
+        }
+        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
+        window.addEventListener("phx:set-theme", ({ detail: { theme } }) => setTheme(theme));
+      })();
+    </script>
+    <script
+      defer
+      src="https://unpkg.com/@tinybirdco/flock.js"
+      data-token="p.eyJ1IjogImViNjBmMTIyLWYzZGMtNDNkZS05NjYzLThmNjQwNDNhM2JiZiIsICJpZCI6ICJhNmM3MTE4ZC02NmM5LTQyNjgtOTYxYS03MmY1OGExNjBhY2QiLCAiaG9zdCI6ICJnY3AtZXVyb3BlLXdlc3QyIn0.CZRr_04EgcHe-C8DTL-yUSi8yRKw19bS3SiNYvDYu30"
+    >
+    </script>
+    {Application.get_env(:live_debugger, :live_debugger_tags)}
+  </head>
+  <body>
+    {@inner_content}
+  </body>
+</html>
