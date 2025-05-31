@@ -29,8 +29,23 @@ defmodule LiveviewContacts.Contacts do
   """
 
   def list_page(params \\ []) do
-    Contact
-    |> Repo.paginate(params)
+    search = Keyword.get(params, :search, "")
+
+    query =
+      Contact
+      |> maybe_search(search)
+
+    Repo.paginate(query, params)
+  end
+
+  defp maybe_search(query, ""), do: query
+
+  defp maybe_search(query, search) do
+    pattern = "%" <> search <> "%"
+
+    from c in query,
+      where:
+        ilike(c.first_name, ^pattern) or ilike(c.last_name, ^pattern) or ilike(c.email, ^pattern)
   end
 
   @doc """
