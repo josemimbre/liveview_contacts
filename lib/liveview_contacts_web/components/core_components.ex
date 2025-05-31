@@ -527,4 +527,109 @@ defmodule LiveviewContactsWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  # Pagination component
+  @doc """
+  Renders pagination controls.
+
+  ## Assigns
+  - :page (integer) - current page
+  - :total_pages (integer) - total number of pages
+  - :on_page_change (string) - event to trigger on page change (default: "paginate")
+  - :show_first_last (boolean) - show first/last page buttons (default: false)
+
+  ## Example
+    <.pagination page={@page} total_pages={@total_pages} />
+  """
+  attr :page, :integer, required: true
+  attr :total_pages, :integer, required: true
+  attr :on_page_change, :string, default: "paginate"
+  attr :show_first_last, :boolean, default: false
+
+  def pagination(assigns) do
+    ~H"""
+    <div class="flex justify-center my-6">
+      <nav class="join" aria-label="Pagination Navigation">
+        <button
+          :if={@show_first_last}
+          class="join-item btn"
+          aria-label="First page"
+          phx-click={@on_page_change}
+          phx-value-page={1}
+          disabled={@page == 1}
+        >
+          First
+        </button>
+        <button
+          class="join-item btn"
+          aria-label="Previous page"
+          phx-click={@on_page_change}
+          phx-value-page={max(@page - 1, 1)}
+          disabled={@page == 1}
+        >
+          «
+        </button>
+        <button class="join-item btn" aria-current="page">{@page}</button>
+        <button
+          class="join-item btn"
+          aria-label="Next page"
+          phx-click={@on_page_change}
+          phx-value-page={min(@page + 1, @total_pages)}
+          disabled={@page == @total_pages}
+        >
+          »
+        </button>
+        <button
+          :if={@show_first_last}
+          class="join-item btn"
+          aria-label="Last page"
+          phx-click={@on_page_change}
+          phx-value-page={@total_pages}
+          disabled={@page == @total_pages}
+        >
+          Last
+        </button>
+      </nav>
+    </div>
+    """
+  end
+
+  # Search box component
+  @doc """
+  Renders a search box for filtering.
+
+  ## Assigns
+  - :search (string) - current search value
+  - :placeholder (string) - input placeholder (default: "Search contacts...")
+  - :input_class (string) - input CSS classes (default: DaisyUI+Tailwind)
+
+  ## Example
+    <.search_box search={@search} />
+    <.search_box search={@search} placeholder="Find user..." input_class="input input-bordered w-64" />
+  """
+  attr :search, :string, default: ""
+  attr :placeholder, :string, default: "Search contacts..."
+
+  attr :input_class, :string,
+    default:
+      "input input-bordered input-primary w-48 transition-all duration-300 focus:w-72 focus:shadow-lg"
+
+  def search_box(assigns) do
+    ~H"""
+    <form
+      phx-change="search"
+      class="flex items-center gap-2"
+      role="search"
+      aria-label="Search contacts"
+    >
+      <.input
+        name="search"
+        value={@search || ""}
+        type="search"
+        placeholder={@placeholder}
+        class={@input_class}
+      />
+    </form>
+    """
+  end
 end

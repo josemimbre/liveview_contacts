@@ -10,41 +10,16 @@ defmodule LiveviewContactsWeb.ContactLive.Index do
       <.header>
         Total contacts: {@total_entries}
         <:actions>
-          <form phx-change="search" class="flex items-center gap-2">
-            <.input
-              name="search"
-              value={@search || ""}
-              type="search"
-              placeholder="Search contacts..."
-              class="input input-bordered input-primary w-48 transition-all duration-300 focus:w-72 focus:shadow-lg"
-            />
-          </form>
+          <.search_box search={@search} placeholder="Search contacts..." />
         </:actions>
       </.header>
 
-      <div class="flex justify-center my-6">
-        <nav class="join">
-          <button
-            class="join-item btn"
-            phx-click="paginate"
-            phx-value-page={max(@page - 1, 1)}
-            disabled={@page == 1}
-          >
-            «
-          </button>
-          <button class="join-item btn">
-            {@page}
-          </button>
-          <button
-            class="join-item btn"
-            phx-click="paginate"
-            phx-value-page={min(@page + 1, @total_entries)}
-            disabled={@page == @total_pages}
-          >
-            »
-          </button>
-        </nav>
-      </div>
+      <.pagination
+        page={@page}
+        total_pages={@total_pages}
+        on_page_change="paginate"
+        show_first_last={true}
+      />
 
       <.card_wrapper
         id="contacts"
