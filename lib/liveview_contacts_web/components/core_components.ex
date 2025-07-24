@@ -635,4 +635,48 @@ defmodule LiveviewContactsWeb.CoreComponents do
     </form>
     """
   end
+
+  @doc """
+  Renders a contact card component.
+
+  ## Examples
+
+      <.contact_card contact={@contact} />
+      <.contact_card contact={@contact} class="max-w-sm" />
+  """
+  attr :contact, :map, required: true, doc: "the contact struct to display"
+  attr :class, :string, default: "max-w-2xl mx-auto", doc: "additional CSS classes for the card"
+  attr :rest, :global, doc: "the arbitrary HTML attributes to add to the card container"
+
+  def contact_card(assigns) do
+    ~H"""
+    <div class={["card rounded-xl bg-white shadow-lg ring-1 ring-gray-200", @class]} {@rest}>
+      <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 rounded-t-xl flex flex-col justify-center items-center">
+        <figure class="h-24 w-24 rounded-full ring-4 ring-white/20">
+          <img src={@contact.picture} class="h-full w-full" />
+        </figure>
+        <div class="p-2 items-center text-center">
+          <h2 class="card-title text-white">{@contact.first_name} {@contact.last_name}</h2>
+          <p class="text-white/90">{@contact.location}</p>
+          <p class="text-white/90">{@contact.birth_date}</p>
+        </div>
+      </div>
+      <div class="p-3 items-center text-left">
+        <p class="text-gray-600">
+          {@contact.headline}
+        </p>
+      </div>
+      <div class="p-3 bg-blue-50 rounded-b-xl flex justify-between items-center">
+        <div class="text-gray-600">
+          <p class="text-sm font-medium">Phone</p>
+          <p>{@contact.phone_number}</p>
+        </div>
+        <div class="text-gray-600 text-right">
+          <p class="text-sm font-medium">Email</p>
+          <p>{@contact.email}</p>
+        </div>
+      </div>
+    </div>
+    """
+  end
 end
