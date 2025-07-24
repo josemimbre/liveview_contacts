@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :liveview_contacts, LiveviewContacts.Repo,
-  username: "bird_borrow",
-  password: "mysecretpassword",
+  username: "postgres",
+  password: "example",
   hostname: "localhost",
   database: "liveview_contacts_dev",
   stacktrace: true,
